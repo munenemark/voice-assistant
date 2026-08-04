@@ -157,6 +157,20 @@
             response = "Opening Google now.";
             window.open("https://www.google.com", "_blank");
         }
+        else if (command.includes("light mode")) {
+            response = "Switching to light mode.";
+            document.body.style.backgroundColor = "#ffffff";
+            document.body.style.color = "#000000";
+            document.querySelector('.assistant-container').style.backgroundColor = "#f0f0f0";
+            document.querySelector('.assistant-container').style.boxShadow = "0 10px 30px rgba(0,0,0,0.2)";
+        }
+        else if (command.includes("dark mode")) {
+            response = "Switching back to dark mode.";
+            document.body.style.backgroundColor = "#121212";
+            document.body.style.color = "#ffffff";
+            document.querySelector('.assistant-container').style.backgroundColor = "#1e1e1e";
+            document.querySelector('.assistant-container').style.boxShadow = "0 10px 30px rgba(0,0,0,0.7)";
+        }
             else {
                 response = "I heard you, but I don't know how to respond to that yet.";
             }
