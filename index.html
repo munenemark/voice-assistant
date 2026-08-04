@@ -151,6 +151,12 @@
             else if (command.includes("joke")) {
                 response = "Why do programmers prefer dark mode? Because light attracts bugs!";
             }
+            
+        // --- NEW CODE STARTS HERE ---
+            else if (command.includes("open google")) {
+            response = "Opening Google now.";
+            window.open("https://www.google.com", "_blank");
+        }
             else {
                 response = "I heard you, but I don't know how to respond to that yet.";
             }
