@@ -168,7 +168,7 @@ function speak(text) {
     // 2. BACKEND FALLBACK (Sent to your Python app.py server)
     else {
         try {
-            let apiResponse = await fetch("http://127.0.0.1:5000/api/command", {
+            let apiResponse = await fetch("https://voice-assistant-vma9.onrender.com/api/command", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ command: command })
