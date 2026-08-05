@@ -136,68 +136,47 @@
         }
 
         // 4. The Brain of the Assistant
-        function processCommand(command) {
-    command = command.toLowerCase(); // <--- THIS LINE IS CRITICAL
+       
+        async function processCommand(command) {
+    command = command.toLowerCase();
     let response = "";
 
-    // ... your else if statements ...
-
-            if (command.includes("hello") || command.includes("hi")) {
-                response = "Hello there! How can I help you today?";
-            } 
-            else if (command.includes("time")) {
-                let now = new Date();
-                response = "The current time is " + now.toLocaleTimeString();
-            }
-           
-            else if (command.includes("joke")) {
-                response = "Why do programmers prefer dark mode? Because light attracts bugs!";
-            }
-            
-        // --- NEW CODE STARTS HERE ---
-            else if (command.includes("open google")) {
-            response = "Opening Google now.";
-            window.open("https://www.google.com", "_blank");
-        }
-        else if (command.includes("light mode")) {
-            response = "Switching to light mode.";
-            document.body.style.backgroundColor = "#ffffff";
-            document.body.style.color = "#000000";
-            document.querySelector('.assistant-container').style.backgroundColor = "#f0f0f0";
-            document.querySelector('.assistant-container').style.boxShadow = "0 10px 30px rgba(0,0,0,0.2)";
-        }
-        else if (command.includes("dark mode")) {
-            response = "Switching back to dark mode.";
-            document.body.style.backgroundColor = "#121212";
-            document.body.style.color = "#ffffff";
-            document.querySelector('.assistant-container').style.backgroundColor = "#1e1e1e";
-            document.querySelector('.assistant-container').style.boxShadow = "0 10px 30px rgba(0,0,0,0.7)";
-        }
-        // --- TOBI'S IDENTITY COMMANDS ---
-        else if (command.includes("name") || command.includes("who are you")) {
-            response = "My name is Tobi, your custom JavaScript web assistant!";
-        }
-        else if (command.includes("tobi") || command.includes("hey tobi")) {
-            response = "Hey! Tobi here, ready for your command.";
-        }
-        // --- TOBI'S CREATOR ACKNOWLEDGMENT ---
-        else if (command.includes("created") || command.includes("made") || command.includes("built") || command.includes("creator")) {
-            response = "I was created by Mark.";
-        }
-        // --- SCREENSHOT COMMAND ---
-        else if (command.includes("screenshot") || command.includes("capture")) {
-            response = "Taking a screenshot now!";
-            html2canvas(document.body).then(canvas => {
-                let link = document.createElement('a');
-                link.download = 'tobi-screenshot.png';
-                link.href = canvas.toDataURL();
-                link.click();
+    // 1. LOCAL FRONTEND COMMANDS (Handled directly in your browser)
+    if (command.includes("name") || command.includes("tobi")) {
+        response = "My name is Tobi, your custom JavaScript web assistant!";
+        speak(response);
+    } 
+    else if (command.includes("created") || command.includes("built")) {
+        response = "I was created by Mark.";
+        speak(response);
+    } 
+    else if (command.includes("screenshot")) {
+        response = "Taking a screenshot now!";
+        speak(response);
+        html2canvas(document.body).then(canvas => {
+            let link = document.createElement('a');
+            link.download = 'tobi-screenshot.png';
+            link.href = canvas.toDataURL();
+            link.click();
+        });
+    } 
+    // 2. BACKEND FALLBACK (Sent to your Python app.py server)
+    else {
+        try {
+            let apiResponse = await fetch("http://127.0.0.1:5000/api/command", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ command: command })
             });
-        }
-            else {
-                response = "I heard you, but I don't know how to respond to that yet.";
-            }
 
+            let data = await apiResponse.json();
+            response = data.reply;
+        } catch (error) {
+            response = "I couldn't reach my Python backend. Make sure app.py is running!";
+        }
+        speak(response);
+    }
+}
             speakOutLoud(response);
         }
 
