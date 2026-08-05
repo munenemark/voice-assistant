@@ -171,6 +171,13 @@
             document.querySelector('.assistant-container').style.backgroundColor = "#1e1e1e";
             document.querySelector('.assistant-container').style.boxShadow = "0 10px 30px rgba(0,0,0,0.7)";
         }
+        // --- TOBI'S IDENTITY COMMANDS ---
+        else if (command.includes("name") || command.includes("who are you")) {
+            response = "My name is Tobi, your custom JavaScript web assistant!";
+        }
+        else if (command.includes("tobi") || command.includes("hey tobi")) {
+            response = "Hey! Tobi here, ready for your command.";
+        }
             else {
                 response = "I heard you, but I don't know how to respond to that yet.";
             }
