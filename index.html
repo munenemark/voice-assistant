@@ -76,6 +76,7 @@
             color: #00ffcc;
         }
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
     <div class="assistant-container">
@@ -178,6 +179,20 @@
         }
         else if (command.includes("tobi") || command.includes("hey tobi")) {
             response = "Hey! Tobi here, ready for your command.";
+        }
+        // --- TOBI'S CREATOR ACKNOWLEDGMENT ---
+        else if (command.includes("created") || command.includes("made") || command.includes("built") || command.includes("creator")) {
+            response = "I was created by Mark.";
+        }
+        // --- SCREENSHOT COMMAND ---
+        else if (command.includes("screenshot") || command.includes("capture")) {
+            response = "Taking a screenshot now!";
+            html2canvas(document.body).then(canvas => {
+                let link = document.createElement('a');
+                link.download = 'tobi-screenshot.png';
+                link.href = canvas.toDataURL();
+                link.click();
+            });
         }
             else {
                 response = "I heard you, but I don't know how to respond to that yet.";
