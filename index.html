@@ -136,7 +136,10 @@
 
         // 4. The Brain of the Assistant
         function processCommand(command) {
-            let response = "";
+    command = command.toLowerCase(); // <--- THIS LINE IS CRITICAL
+    let response = "";
+
+    // ... your else if statements ...
 
             if (command.includes("hello") || command.includes("hi")) {
                 response = "Hello there! How can I help you today?";
