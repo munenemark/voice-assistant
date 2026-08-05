@@ -134,6 +134,11 @@
             document.getElementById('talkBtn').classList.remove('listening');
             recognition.stop();
         }
+        // --- TOBI'S VOICE OUTPUT ENGINE ---
+function speak(text) {
+    const utterance = new SpeechSynthesisUtterance(text);
+    window.speechSynthesis.speak(utterance);
+}
 
         // 4. The Brain of the Assistant
        
