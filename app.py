@@ -46,7 +46,8 @@ def process_voice_command():
                 )
                 response_text = response.text
             except Exception as e:
-                print(f"❌ Gemini Error: {e}")  # Prints to your terminal / Render logs
+                error_str = str(e)
+                print(f"❌ Gemini Error: {error_str}")  # Prints to your terminal / Render logs
                 if "429" in error_str or "Quota" in error_str or "RESOURCE_EXHAUSTED" in error_str:
                     response_text = "I'm receiving requests too quickly! Please wait about 30 seconds before asking again."
                 else:
