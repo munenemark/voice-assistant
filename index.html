@@ -117,17 +117,15 @@
         }
 
         // 3. What happens when it hears you
-        recognition.onresult = function(event) {
-            // Stop the pulsing animation
-            document.getElementById('talkBtn').classList.remove('listening');
-            
-            // Get the exact words you said
-            let transcript = event.results[0][0].transcript.toLowerCase();
-            document.getElementById('userText').innerText = `You said: "${transcript}"`;
-            
-            // Figure out how to respond
-            processCommand(transcript);
-        };
+       recognition.onresult = (event) => {
+    const transcript = event.results[event.results.length - 1][0].transcript.trim();
+    
+    // ONLY send if the recognition is final
+    if (event.results[event.results.length - 1].isFinal) {
+        console.log("Sending command:", transcript);
+        processCommand(transcript);
+    }
+};
 
         // If it stops listening without hearing anything
         recognition.onspeechend = function() {
