@@ -47,7 +47,10 @@ def process_voice_command():
                 response_text = response.text
             except Exception as e:
                 print(f"❌ Gemini Error: {e}")  # Prints to your terminal / Render logs
-                response_text = f"AI Error: {str(e)}"
+                if "429" in error_str or "Quota" in error_str or "RESOURCE_EXHAUSTED" in error_str:
+                    response_text = "I'm receiving requests too quickly! Please wait about 30 seconds before asking again."
+                else:
+                    response_text = "I ran into a temporary issue connecting to my AI brain."
 
     return jsonify({"reply": response_text})
 
