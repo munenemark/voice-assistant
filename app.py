@@ -1,39 +1,55 @@
+import os
+import datetime
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-import datetime
+from dotenv import load_dotenv
+from google import genai
+
+# Load environment variables from .env file
+load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
 
+# Initialize Gemini AI Client
+api_key = os.getenv("GEMINI_API_KEY")
+client = genai.Client(api_key=api_key) if api_key else None
+
 @app.route("/api/command", methods=["POST"])
 def process_voice_command():
     data = request.get_json()
-    command = data.get("command", "").lower()
+    command = data.get("command", "").strip()
+    command_lower = command.lower()
     
     response_text = ""
 
-    # GREETINGS
-    if "hello" in command or "hi" in command or "hey" in command:
-        response_text = "Hello Mark! Tobi is online and ready to help."
-
-    # TIME
-    elif "time" in command or "clock" in command:
+    # 1. HARDCODED SYSTEM COMMANDS
+    if "time" in command_lower or "clock" in command_lower:
         current_time = datetime.datetime.now().strftime("%I:%M %p")
         response_text = f"The current time is {current_time}."
-    
-    # JOKES
-    elif "joke" in command:
-        response_text = "Why do Python programmers prefer dark mode? Because light attracts bugs!"
         
-    # STATUS
-    elif "status" in command:
-        response_text = "Tobi's Python backend is online and running smoothly!"
-        
+    elif "status" in command_lower:
+        response_text = "Tobi's Python backend is online and powered by Gemini AI!"
+
+    # 2. GENERAL QUESTIONS / CONVERSATIONS (Passed to Gemini AI)
     else:
-        response_text = f"Tobi's backend received: '{command}', but doesn't have a rule for it yet."
+        if not client:
+            response_text = "Gemini API key is missing. Please check server setup."
+        else:
+            try:
+                # Keep responses concise so Tobi speaks naturally
+                prompt = f"You are Tobi, a helpful voice assistant. Keep your response brief, friendly, and under 3 sentences. User said: {command}"
+                
+                response = client.models.generate_content(
+                    model="gemini-2.5-flash",
+                    contents=prompt
+                )
+                response_text = response.text
+            except Exception as e:
+                response_text = f"I ran into an issue processing that with AI."
 
     return jsonify({"reply": response_text})
 
 if __name__ == "__main__":
-    print("🚀 Tobi Backend is running on http://127.0.0.1:5000")
+    print("🚀 Tobi Backend with Gemini AI is running on http://127.0.0.1:5000")
     app.run(port=5000, debug=True)
