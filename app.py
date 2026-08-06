@@ -41,7 +41,7 @@ def process_voice_command():
                 prompt = f"You are Tobi, a helpful voice assistant. Keep your response brief, friendly, and under 3 sentences. User said: {command}"
                 
                 response = client.models.generate_content(
-                    model="gemini-2.5-flash",
+                    model="gemini-2.0-flash",
                     contents=prompt
                 )
                 response_text = response.text
