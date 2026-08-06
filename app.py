@@ -46,7 +46,8 @@ def process_voice_command():
                 )
                 response_text = response.text
             except Exception as e:
-                response_text = f"I ran into an issue processing that with AI."
+                print(f"❌ Gemini Error: {e}")  # Prints to your terminal / Render logs
+                response_text = f"AI Error: {str(e)}"
 
     return jsonify({"reply": response_text})
 
